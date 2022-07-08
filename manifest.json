@@ -1,0 +1,21 @@
+{
+  "datatypes": {
+    "exchange": {
+      "template": "templates/exchange.json",
+      "property-mapping": {
+        "country": "country",
+        "timezone": "timezone"
+      }
+    },
+    "stock": {
+      "template": "templates/stock.json",
+      "property-mapping": {
+        "exchange": "exchange",
+        "country": "country",
+        "currency": "currency",
+        "type": "stock-type"
+      }
+    }
+  },
+  "system-template": "templates/system.json"
+}

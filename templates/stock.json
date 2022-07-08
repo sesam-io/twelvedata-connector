@@ -1,0 +1,46 @@
+[
+  {
+  "_id": "{{@ system @}}-stock-raw",
+  "type": "pipe",
+  "source": {
+    "type": "rest",
+    "system": "{{@ system @}}",
+    "id_expression": "{{ exchange }}-{{ symbol }}",
+    "operation": "stocks",
+    "payload_property": "data",
+    "rate_limiting_delay": 60,
+    "rate_limiting_retries": 3
+  },
+  "pump": {
+    "cron_expression": "0 6 * * ?"
+  },
+  "add_namespaces": false
+}
+,{
+  "_id": "{{@ system @}}-stock",
+  "type": "pipe",
+  "source": {
+    "type": "dataset",
+    "dataset": "{{@ system @}}-stock-raw"
+  },
+  "transform": {
+    "type": "dtl",
+    "rules": {
+      "default": [
+        ["copy", "*"],
+        ["add", "rdf:type",
+          ["ni", "{{@ system @}}", "stock"]
+        ],
+        ["comment", "*** Add identifiers ***"],
+        ["make-ni", "{{@ system @}}-exchange", "exchange"],
+        ["make-ni", "{{@ system @}}-country", "country"],
+        ["make-ni", "{{@ system @}}-currency", "currency"],
+        ["make-ni", "{{@ system @}}-stock-type", "type"]
+      ]
+    }
+  },
+  "add_namespaces": true
+}
+
+
+]
