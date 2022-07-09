@@ -1,6 +1,6 @@
 [
   {
-  "_id": "{{@ system @}}-exchange-raw",
+  "_id": "{{@ system @}}-exchange-collect",
   "type": "pipe",
   "source": {
     "type": "rest",
@@ -16,62 +16,4 @@
   },
   "add_namespaces": false
 }
-,
-  {
-  "_id": "{{@ system @}}-exchange",
-  "type": "pipe",
-  "source": {
-    "type": "dataset",
-    "dataset": "{{@ system @}}-exchange-raw"
-  },
-  "transform": {
-    "type": "dtl",
-    "rules": {
-      "default": [
-        ["copy", "*"],
-        ["add", "rdf:type",
-          ["ni", "{{@ system @}}", "exchange"]
-        ],
-        ["comment", "*** Add identifiers and object***"],
-        ["if",
-          ["is-not-empty", "_S.country"],
-          [
-            ["make-ni", "{{@ system @}}-country", "country"],
-            ["create",
-              ["dict", "_id",
-                ["concat", "{{@ system @}}-country:", "_S.country"], "rdf:type",
-                ["ni", "{{@ system @}}", "country"], "{{@ system @}}-country:value", "_S.country"]
-            ]
-          ]
-        ],
-        ["if",
-          ["is-not-empty", "_S.timezone"],
-          [
-            ["make-ni", "{{@ system @}}-timezone", "timezone"],
-            ["create",
-              ["dict", "_id",
-                ["concat", "{{@ system @}}-timezone:", "_S.timezone"], "rdf:type",
-                ["ni", "{{@ system @}}", "timezone"], "{{@ system @}}-timezone:value", "_S.timezone"]
-            ]
-          ]
-        ],
-        ["comment", "*** Add main ***"],
-        ["make-ni", "{{@ system @}}-exchange", "name", "main-ni"],
-        ["create",
-          ["apply", "main", "_T."]
-        ]
-      ],
-      "main": [
-        ["copy", "*"],
-        ["add", "_id",
-          ["concat", "{{@ system @}}-exchange:", "_S.name"]
-        ],
-        ["remove", "code"],
-        ["remove", "main"]
-      ]
-    }
-  },
-  "add_namespaces": true
-}
-
 ]

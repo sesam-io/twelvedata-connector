@@ -1,6 +1,6 @@
 [
   {
-  "_id": "{{@ system @}}-stock-raw",
+  "_id": "{{@ system @}}-stock-collect",
   "type": "pipe",
   "source": {
     "type": "rest",
@@ -16,31 +16,4 @@
   },
   "add_namespaces": false
 }
-,{
-  "_id": "{{@ system @}}-stock",
-  "type": "pipe",
-  "source": {
-    "type": "dataset",
-    "dataset": "{{@ system @}}-stock-raw"
-  },
-  "transform": {
-    "type": "dtl",
-    "rules": {
-      "default": [
-        ["copy", "*"],
-        ["add", "rdf:type",
-          ["ni", "{{@ system @}}", "stock"]
-        ],
-        ["comment", "*** Add identifiers ***"],
-        ["make-ni", "{{@ system @}}-exchange", "exchange"],
-        ["make-ni", "{{@ system @}}-country", "country"],
-        ["make-ni", "{{@ system @}}-currency", "currency"],
-        ["make-ni", "{{@ system @}}-stock-type", "type"]
-      ]
-    }
-  },
-  "add_namespaces": true
-}
-
-
 ]
